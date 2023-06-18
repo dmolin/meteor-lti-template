@@ -1,3 +1,4 @@
+import "./hooks";
 import { ltiInit } from "/imports/lti/server/init";
 
 try {

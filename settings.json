@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://publishedurl",
+  "baseUrl": "https://thisserverpublishedurl",
   "lmsUrl": "https://lmsaccount.instructure.com",
   "public": {
 
