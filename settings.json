@@ -1,0 +1,16 @@
+{
+  "baseUrl": "https://publishedurl",
+  "lmsUrl": "https://lmsaccount.instructure.com",
+  "public": {
+
+  },
+  "private": {
+    "lti": {
+      "signKey": "-some-cool-sign-key-",
+      "cookies": {
+        "secure": false,
+        "sameSite": "None"
+      }
+    }
+  }
+}
