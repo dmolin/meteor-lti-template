@@ -35,37 +35,51 @@ function getClaim (token: JwtPayload, claim: string) {
 }
 
 function provisionAccount (uniqueId: string, token: JwtPayload) {
+  const roles: string[] = getClaim(token, "roles");
+  if (_.isEmpty(roles)) {
+    console.error(
+      `provisionAccount: Account not provisioned for user ${token.user}. role missing in payload`
+    );
+    throw new Meteor.Error("Invalid LTI role");
+  }
+
   const existing = Meteor.users.findOne({ "services.lti.sub": uniqueId });
   if (existing) {
     // existing user. just sync the data coming from the LMS (if changed) and return the user
+    Meteor.users.update(existing._id, {
+      $set: {
+        "profile.firstName": token.given_name || "participant",
+        "profile.lastName": token.family_name || "lastname",
+        "profile.role": decodeRole(_.first(roles)!),
+        "services.lti.session": {
+          id: Random.secret(),
+          expiresAt: moment().add(5, "minutes").toDate(),
+          issuedAt: moment().toDate(),
+        },
+      },
+    });
     // return existing user
-    return existing;
+    return Meteor.users.findOne(existing._id);
   }
 
   // create a new account, add the lti data to it  and return it
   console.log("creating new LTI account from payload");
-  const roles: string[] = getClaim(token, "roles");
-  if (_.isEmpty(roles)) {
-    console.error(`provisionAccount: Account not provisioned for user ${token.user}. role missing in payload`);
-    throw new Meteor.Error("Invalid LTI role");
-  }
-
   const userId = Meteor.users.insert({
     profile: {
       firstName: token.given_name || "participant",
       lastName: token.family_name || "lastname",
-      role: decodeRole(_.first(roles)!)
+      role: decodeRole(_.first(roles)!),
     },
     services: {
       lti: {
         sub: makeSub(token),
+        session: {
+          id: Random.secret(),
+          expiresAt: moment().add(5, "minutes").toDate(),
+          issuedAt: moment().toDate(),
+        },
       },
-      session: {
-        id: Random.secret(),
-        expiresAt: moment().add(5, "minutes").toDate(),
-        issuedAt: moment().toDate(),
-      }
-    }
+    },
   });
   return Meteor.users.findOne({ _id: userId });
 }
