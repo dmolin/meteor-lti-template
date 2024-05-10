@@ -40,9 +40,9 @@ function registerLMSIntegration () {
   );
 }
 
-async function launchHandler (token: JwtPayload, _req: any, res: any) {
+async function launchHandler(token: JwtPayload, _req: any, res: any) {
   log("============> LTI launch received", token);
-  processLaunch(token);
+  processLaunch(res, token);
 }
 
 /**

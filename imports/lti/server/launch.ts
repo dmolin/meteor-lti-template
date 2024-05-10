@@ -70,7 +70,7 @@ function provisionAccount (uniqueId: string, token: JwtPayload) {
   return Meteor.users.findOne({ _id: userId });
 }
 
-export function processLaunch (token: JwtPayload) {
+export function processLaunch(res: any, token: JwtPayload) {
   // pick account data from payload and fetch or create account on the platform
   // we use the platform iss(uer) + platform user to generate a unique id
   const account = provisionAccount(makeSub(token), token);
@@ -78,10 +78,11 @@ export function processLaunch (token: JwtPayload) {
   if (!account) {
     console.error("failed to provision account");
     // throw exception or return a redirect to an error page
-    return { redirect: "/lti/error" };
+    res.redirect("/lti/error");
   }
 
   // generate a unique session id for this launch (will expire shortly) and then redirect to a launch page
   // that will log this user in
-  return { redirect: `/lti/launch/${account.services.lti.session.id}` };
+  console.log(`Redirect to /lti/launch/${account.services.lti.session.id}`);
+  res.redirect(`/lti/launch/${account.services.lti.session.id}`);
 }
