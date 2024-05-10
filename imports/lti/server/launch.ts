@@ -31,7 +31,10 @@ function decodeRole (roleClaim: string) {
 
 function getClaim (token: JwtPayload, claim: string) {
   if (!token || !claim) return null;
-  return token[`https://purl.imsglobal.org/spec/lti/claim/${claim}`];
+  return (
+    token[`https://purl.imsglobal.org/spec/lti/claim/${claim}`] ??
+    token["platformContext"][claim]
+  );
 }
 
 function provisionAccount (uniqueId: string, token: JwtPayload) {
