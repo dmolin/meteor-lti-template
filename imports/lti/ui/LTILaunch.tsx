@@ -13,9 +13,9 @@ export const LTILaunch = () => {
   useEffect(() => {
     // kickstart the whole process, by setting "loggingIn" to true.
     // this will allow us to delay processing of the logged in user until the check is completed
+    console.log(`Logging in with sessionId ${sessionId}`);
     setLoggingIn(true);
   }, []);
-
 
   useEffect(() => {
     if (!loggingIn) return;
@@ -44,11 +44,9 @@ export const LTILaunch = () => {
   return (
     <div>
       <h1>Logging in user and accessing content...</h1>
-      {user &&
-        <Navigate to={"/lti/ui/LTIContent"} />
-      }
+      {user && <Navigate to={"/lti/content"} />}
     </div>
   );
-}
+};
 
 export default LTILaunch;
