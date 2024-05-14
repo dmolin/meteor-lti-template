@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
-    "@hubroeducation/ltijs": "^5.9.3",
+    "@hubroeducation/ltijs": "^5.9.8",
     "debug": "^4.3.4",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
